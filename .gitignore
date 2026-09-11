@@ -50,3 +50,6 @@ app.*.map.json
 
 # Local config (machine-specific SDK paths)
 android/local.properties
+
+# Kotlin build artifacts
+android/.kotlin/

@@ -74,8 +74,18 @@ class SessionCubit extends Cubit<SessionState> {
 
     emit(state.copyWith(themeMode: _settings.themeMode));
 
-    final hasSession = await _auth.hasSession();
-    final pinSet = await _pin.isPinSet();
+    var hasSession = false;
+    var pinSet = false;
+
+    try {
+      await Future(() async {
+        hasSession = await _auth.hasSession();
+        pinSet = await _pin.isPinSet();
+      }).timeout(AppConfig.splashMaxDuration);
+    } on TimeoutException {
+      hasSession = false;
+      pinSet = false;
+    }
 
     final elapsed = DateTime.now().difference(started);
     if (elapsed < AppConfig.splashMinDuration) {
